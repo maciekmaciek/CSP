@@ -5,6 +5,6 @@ import java.util.Stack;
  * maciekwski@gmail.com
  * on 2015-04-17.
  */
-public class Solver {
-    Stack
+public class FCSolver {
+
 }

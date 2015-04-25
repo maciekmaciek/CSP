@@ -19,7 +19,33 @@ public final class ConstraintChecker {
     }
 
     public boolean check(String con, HashMap<String, Integer> values){
+        stack.clear();
+        elements = con.split(" ");
+        for(String elem: elements){
+            if(!isOperator(elem)){
+                stack.push(elem);
+            } else {
+                treatOperator(elem);
+            }
+        }
+        return Boolean.parseBoolean(stack.pop());
+    }
 
+    private void treatOperator(String elem) {
+        int[] taken;
+        switch(elem){
+            case "+":
+                taken = take2();
+                break;
+        }
+    }
+
+    private int[] take2() {
+        return new int[0];
+    }
+
+    private boolean isOperator(String elem) {
         return false;
+
     }
 }
