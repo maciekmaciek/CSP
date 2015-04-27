@@ -2,7 +2,7 @@ package Interpreter;
 
 import CSP.Variable;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * Created by Maciej Wolañski
@@ -15,7 +15,10 @@ public class VariableHolder implements Expression {
     public VariableHolder(String name)
     { this.name = name; }
 
-    public Integer interpret(Map<String, Variable> variables)  {
-        return variables.get(name).getValue();
+    public Integer interpret(ArrayList<Variable> variables)  {
+        for(Variable var :variables)
+            if(var.getName().equals(name))
+                return var.getValue();
+        return null;
     }
 }

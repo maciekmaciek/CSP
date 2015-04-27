@@ -3,7 +3,7 @@ package Interpreter.Deciding;
 import CSP.Variable;
 import Interpreter.Expression;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * Created by Maciej Wolañski
@@ -20,7 +20,7 @@ public class More implements Expression {
     }
 
     @Override
-    public Integer interpret(Map<String, Variable> variables) {
+    public Integer interpret(ArrayList<Variable> variables) {
         Integer left = leftO.interpret(variables);
         Integer right = rightO.interpret(variables);
         if(left == null || right == null || left > right)

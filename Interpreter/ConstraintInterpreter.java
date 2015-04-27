@@ -8,7 +8,6 @@ import Interpreter.Counting.Substract;
 import Interpreter.Deciding.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -91,7 +90,7 @@ public class ConstraintInterpreter implements Expression {
     }
 
     @Override
-    public Integer interpret(Map<String, Variable> variables) {
+    public Integer interpret(ArrayList<Variable> variables) {
         return tree.interpret(variables);
     }
 }

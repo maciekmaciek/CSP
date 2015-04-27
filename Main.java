@@ -1,5 +1,6 @@
 import CSP.CSPParser;
 import Solver.BTSolver;
+import Solver.FCSolver;
 
 import java.io.File;
 
@@ -10,11 +11,15 @@ import java.io.File;
  */
 public class Main {
     public static void main(String[] args){
-        //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\BasicProblem.Txt"));
+        //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku3d.Txt"));
         //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Hetmany.Txt"));
         CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku.Txt"));
         BTSolver bts = new BTSolver(cspp);
+        FCSolver fcs = new FCSolver(cspp);
+
         bts.solveFull(false);
+        fcs.solveFull(false);
         System.out.println(bts.getNumSolutions());
+        System.out.println(fcs.getNumSolutions());
     }
 }

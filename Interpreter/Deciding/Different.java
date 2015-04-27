@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class Different implements Expression {
     private ArrayList<Expression> expressions;
-    private ArrayList<Integer>results = new ArrayList<>();
+    //private ArrayList<Integer>results = new ArrayList<>();
     private HashSet<Integer> filterSet;
 
     public Different(ArrayList<Expression> expressions) {
@@ -20,7 +20,8 @@ public class Different implements Expression {
     }
 
     @Override
-    public Integer interpret(Map<String, Variable> variables) {
+    public Integer interpret(ArrayList<Variable> variables) {
+        ArrayList<Integer> results = new ArrayList<>();
         for(Expression i: expressions)
         {
             results.add(i.interpret(variables));

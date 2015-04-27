@@ -2,7 +2,7 @@ package Interpreter;
 
 import CSP.Variable;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * Created by Maciej Wolañski
@@ -14,6 +14,6 @@ public class IntegerValue implements Expression {
     public IntegerValue(int number)
     { this.number = number; }
 
-    public Integer interpret(Map<String, Variable> variables)
+    public Integer interpret(ArrayList<Variable> variables)
     { return number; }
 }

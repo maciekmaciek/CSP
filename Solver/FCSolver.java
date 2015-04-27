@@ -3,22 +3,24 @@ package Solver;
 import CSP.CSPParser;
 import CSP.Variable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Maciej Wolañski
  * maciekwski@gmail.com
- * on 2015-04-25.
+ * on 2015-04-17.
  */
-public class BTSolver implements Solver{
+public class FCSolver implements Solver{
     int numSolutions;
     CSPParser cspp;
     ArrayList<HashMap<String, Integer>> allResults;
+    HashMap<String, ArrayList<Integer>> preCutDoms;
 
-    public BTSolver(CSPParser cspp) {
+
+    public FCSolver(CSPParser cspp) {
         this.cspp = cspp;
         allResults = new ArrayList<>();
     }
@@ -30,6 +32,7 @@ public class BTSolver implements Solver{
     private boolean solveOneR(int depth){
         depth++;
         Variable var = cspp.getVarsList().get(depth);
+        preCutDoms = backupDomains();
         while(var.hasMoreValues()){
             var.setNextValue();
 
@@ -38,13 +41,24 @@ public class BTSolver implements Solver{
                     write1Result();
                     return true;
                 } else {
-                    if(solveOneR(depth))
-                        return true;
+                    if(cutFromDomains()) {
+                        //sortVariables();
+                        if (solveOneR(depth))
+                            return true;
+                    }
                 }
             }
         }
+        restoreDomains();
         var.reset();
+
         return false;
+    }
+
+    private void restoreDomains() {
+        for(Variable var : cspp.getVarsList()){
+            var.setChangingDomain(preCutDoms.get(var.getName()));
+        }
     }
 
     private void write1Result() {
@@ -56,7 +70,7 @@ public class BTSolver implements Solver{
         for(Variable var : cspp.getVarsList()){
             result.put(var.getName(), var.getValue());
         }
-       return result;
+        return result;
     }
 
     private void solveFullR(int depth, boolean write){
@@ -103,4 +117,55 @@ public class BTSolver implements Solver{
     public ArrayList<HashMap<String, Integer>> getAllSolutions() {
         return allResults;
     }
+
+    private void sortVariables() {
+        cspp.sortVariables();
+    }
+
+    private boolean cutFromDomains() {
+        boolean allFull = true;
+        //backup
+        HashMap<String, ArrayList<Integer>> tempDomains = backupDomains();
+
+
+        //wycinanie
+        int failedIndex = tempDomains.size()-1;
+
+        for(int i = 0; i<cspp.getVarsList().size() && allFull; i++){
+            Variable var = cspp.getVarsList().get(i);
+
+            ArrayList<Integer> changingDomain = var.getChangingDomain();
+            for(int j = 0; j < var.getChangingDomain().size(); j++){
+                var.setNextValue();
+                if(!isAllowed(var)){
+                    var.reset();
+                    changingDomain.remove(i);
+                }
+            }
+            allFull = changingDomain.size()!=0;
+        }
+        //przywracanie
+        if(!allFull) {
+            for(int i = 0; i <= failedIndex; i++){
+                Variable var = cspp.getVarsList().get(i);
+                var.setChangingDomain(tempDomains.get(var.getName()));
+            }
+        }
+        return allFull;
+    }
+
+    private HashMap<String, ArrayList<Integer>> backupDomains() {
+        HashMap<String, ArrayList<Integer>> result = new HashMap<>();
+        for(Variable var: cspp.getVarsList()) {
+            ArrayList<Integer> dom = new ArrayList<>();
+            for(Integer in:var.getChangingDomain()){
+                dom.add(new Integer(in));
+            }
+
+            result.put(var.getName(), dom);
+        }
+        return result;
+    }
 }
+
+

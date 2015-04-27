@@ -2,6 +2,7 @@ package Interpreter;
 
 import CSP.Variable;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -10,5 +11,5 @@ import java.util.Map;
  * on 2015-04-25.
  */
 public interface Expression {
-    public Integer interpret(Map<String, Variable> variables);
+    public Integer interpret(ArrayList<Variable> variables);
 }

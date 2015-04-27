@@ -16,16 +16,19 @@ import java.util.*;
 public class CSPParser {
 
     private File file;
-    private ArrayList<String>varList;
+    private ArrayList<Variable>varList;
     private ArrayList<ArrayList<Integer>> varsCons;
-    private HashMap<String,Variable> vars;
+    //private HashMap<String,Variable> vars;
     private ArrayList<ConstraintInterpreter> cons;
+    private VarComparator vc;
+
     public CSPParser(File file){
         this.file = file;
-        vars = new HashMap<>();
+        //vars = new HashMap<>();
         cons = new ArrayList<ConstraintInterpreter>();
         varList = new ArrayList<>();
         varsCons = new ArrayList<>();
+        vc = new VarComparator();
         prepare();
     }
 
@@ -33,25 +36,25 @@ public class CSPParser {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String[] arr;
-            varList.addAll(Arrays.asList(br.readLine().split(" ")));
-            for (String var : varList) {
+            String[] vararr = br.readLine().split(" ");
+            for (String var : vararr) {
                 ArrayList<Integer> al = new ArrayList<Integer>();
                 varsCons.add(new ArrayList<>());
                 arr = br.readLine().split(" ");
                 for(String s:arr)
                     al.add(Integer.parseInt(s));
-                vars.put(var, new Variable(al));
+                varList.add(new Variable(var, al));
             }
             String line;
             while((line = br.readLine())!=null){
                 ArrayList<String> tokens = new ArrayList<>(Arrays.asList(line.split(" ")));
                 cons.add(new ConstraintInterpreter(tokens));
                 for(int i = 0; i< varList.size(); i++)  //wi¹¿e ograniczenia ze zmiennymi
-                    if(tokens.contains(varList.get(i)))
+                    if(tokens.contains(varList.get(i).getName()))
                         varsCons.get(i).add(cons.size()-1);
 
                 for(int i = 0; i< varList.size(); i++){
-                    vars.get(varList.get(i)).bindConstraints(varsCons.get(i));
+                    varList.get(i).bindConstraints(varsCons.get(i));
                 }
             }
             br.close();
@@ -64,16 +67,20 @@ public class CSPParser {
         return file;
     }
 
-    public HashMap<String, Variable> getVars() {
+    /*public HashMap<String, Variable> getVars() {
         return vars;
     }
-
+*/
 
     public ArrayList<ConstraintInterpreter> getCons() {
         return cons;
     }
 
-    public ArrayList<String> getVarsList() {
+    public ArrayList<Variable> getVarsList() {
         return varList;
+    }
+
+    public void sortVariables() {
+        Collections.sort(varList, vc);
     }
 }
