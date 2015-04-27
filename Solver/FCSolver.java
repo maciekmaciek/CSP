@@ -4,9 +4,7 @@ import CSP.CSPParser;
 import CSP.Variable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Maciej Wolañski
@@ -41,8 +39,8 @@ public class FCSolver implements Solver{
                     write1Result();
                     return true;
                 } else {
-                    if(cutFromDomains()) {
-                        //sortVariables();
+                    if(cutFromDomains(depth)) {
+                        sortVariables();
                         if (solveOneR(depth))
                             return true;
                     }
@@ -76,6 +74,8 @@ public class FCSolver implements Solver{
     private void solveFullR(int depth, boolean write){
         depth++;
         Variable var = cspp.getVarsList().get(depth);
+        preCutDoms = backupDomains();
+
         while(var.hasMoreValues()){
             var.setNextValue();
 
@@ -85,10 +85,14 @@ public class FCSolver implements Solver{
                         write1Result();
                     System.out.println(numSolutions++);
                 } else {
-                    solveFullR(depth, write);
+                    if(cutFromDomains(depth)) {
+                        //sortVariables();
+                        solveFullR(depth, write);
+                    }
                 }
             }
         }
+        restoreDomains();
         var.reset();
     }
 
@@ -122,7 +126,7 @@ public class FCSolver implements Solver{
         cspp.sortVariables();
     }
 
-    private boolean cutFromDomains() {
+    private boolean cutFromDomains(int depth) {
         boolean allFull = true;
         //backup
         HashMap<String, ArrayList<Integer>> tempDomains = backupDomains();
@@ -131,22 +135,27 @@ public class FCSolver implements Solver{
         //wycinanie
         int failedIndex = tempDomains.size()-1;
 
-        for(int i = 0; i<cspp.getVarsList().size() && allFull; i++){
+        for(int i = depth+1; i<cspp.getVarsList().size() && allFull; i++){
             Variable var = cspp.getVarsList().get(i);
 
             ArrayList<Integer> changingDomain = var.getChangingDomain();
-            for(int j = 0; j < var.getChangingDomain().size(); j++){
-                var.setNextValue();
+            int size = changingDomain.size();
+            for(int j = 0; j < size; j++){
+                var.setValue(changingDomain.get(j));
                 if(!isAllowed(var)){
                     var.reset();
-                    changingDomain.remove(i);
+                    changingDomain.remove(j);
+                    size--;
+                    j--;
                 }
             }
+            var.reset();
+
             allFull = changingDomain.size()!=0;
         }
         //przywracanie
         if(!allFull) {
-            for(int i = 0; i <= failedIndex; i++){
+            for(int i = depth+1; i <= failedIndex; i++){
                 Variable var = cspp.getVarsList().get(i);
                 var.setChangingDomain(tempDomains.get(var.getName()));
             }

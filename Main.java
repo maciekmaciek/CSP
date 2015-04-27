@@ -13,7 +13,8 @@ public class Main {
     public static void main(String[] args){
         //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku3d.Txt"));
         //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Hetmany.Txt"));
-        CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku.Txt"));
+        //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku.Txt"));
+        CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\BasicProblem.Txt"));
         BTSolver bts = new BTSolver(cspp);
         FCSolver fcs = new FCSolver(cspp);
 

@@ -69,7 +69,7 @@ public class BTSolver implements Solver{
                 if(depth == cspp.getVarsList().size()-1) { //uda³o siê
                     if(write)
                         write1Result();
-                    System.out.println(numSolutions++);
+                    System.out.println(++numSolutions);
                 } else {
                     solveFullR(depth, write);
                 }

@@ -75,7 +75,10 @@ public class Variable implements Comparable<Variable>{
 
     public boolean hasMoreValues()
     {
-        return (this.value==null && this.changingDomain.size() > 0) || (this.value != null && this.value != this.changingDomain.get(this.changingDomain.size()-1));
+        boolean isLast = changingDomain.get(changingDomain.size()-1).equals(value);
+        boolean isLast2 = changingDomain.get(changingDomain.size()-1) == (value);
+        return (this.value==null && this.changingDomain.size() > 0) ||
+                (this.value != null && !this.value.equals(this.changingDomain.get(this.changingDomain.size()-1)));
     }
 
     public void setNextValue()
