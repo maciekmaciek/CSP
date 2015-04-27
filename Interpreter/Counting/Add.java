@@ -23,8 +23,9 @@ public class Add implements Expression {
     public Integer interpret(Map<String, Variable> variables) {
         Integer left = leftO.interpret(variables);
         Integer right = rightO.interpret(variables);
-        left = left == null ? 0 : left;
-        right = right == null ? 0 : right;
-        return left + right;
+        return left == null || right == null ? null : left + right;
+        //left = left == null ? 0 : left;
+        //right = right == null ? 0 : right;
+        //return left + right;
     }
 }

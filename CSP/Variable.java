@@ -10,6 +10,12 @@ import java.util.List;
  */
 public class Variable {
     private ArrayList<Integer> domain;
+
+    public ArrayList<Integer> getConstraints() {
+        return constraints;
+    }
+
+    private ArrayList<Integer> constraints;
     private Integer value;
 
     public Variable(ArrayList<Integer> domain)
@@ -48,5 +54,13 @@ public class Variable {
     public void setNextValue()
     {
         this.value = this.domain.get(this.domain.indexOf(value)+1);
+    }
+
+    public void bindConstraints(ArrayList<Integer> integers) {
+        constraints = integers;
+    }
+
+    public void reset() {
+        value = null;
     }
 }

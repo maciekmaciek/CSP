@@ -16,23 +16,27 @@ import java.util.*;
 public class CSPParser {
 
     private File file;
+    private ArrayList<String>varList;
+    private ArrayList<ArrayList<Integer>> varsCons;
     private HashMap<String,Variable> vars;
     private ArrayList<ConstraintInterpreter> cons;
     public CSPParser(File file){
         this.file = file;
         vars = new HashMap<>();
         cons = new ArrayList<ConstraintInterpreter>();
+        varList = new ArrayList<>();
+        varsCons = new ArrayList<>();
         prepare();
     }
 
     private void prepare() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
-            ArrayList<String> varList =new ArrayList<>();
             String[] arr;
             varList.addAll(Arrays.asList(br.readLine().split(" ")));
             for (String var : varList) {
                 ArrayList<Integer> al = new ArrayList<Integer>();
+                varsCons.add(new ArrayList<>());
                 arr = br.readLine().split(" ");
                 for(String s:arr)
                     al.add(Integer.parseInt(s));
@@ -40,7 +44,15 @@ public class CSPParser {
             }
             String line;
             while((line = br.readLine())!=null){
-                cons.add(new ConstraintInterpreter(new ArrayList<String>(Arrays.asList(line.split(" ")))));
+                ArrayList<String> tokens = new ArrayList<>(Arrays.asList(line.split(" ")));
+                cons.add(new ConstraintInterpreter(tokens));
+                for(int i = 0; i< varList.size(); i++)  //wi¹¿e ograniczenia ze zmiennymi
+                    if(tokens.contains(varList.get(i)))
+                        varsCons.get(i).add(cons.size()-1);
+
+                for(int i = 0; i< varList.size(); i++){
+                    vars.get(varList.get(i)).bindConstraints(varsCons.get(i));
+                }
             }
             br.close();
         } catch (IOException e) {
@@ -59,5 +71,9 @@ public class CSPParser {
 
     public ArrayList<ConstraintInterpreter> getCons() {
         return cons;
+    }
+
+    public ArrayList<String> getVarsList() {
+        return varList;
     }
 }

@@ -23,8 +23,9 @@ public class Product implements Expression {
     public Integer interpret(Map<String, Variable> variables) {
         Integer left = leftO.interpret(variables);
         Integer right = rightO.interpret(variables);
-        left = left == null ? 1 : left;
-        right = right == null ? 1 : right;
-        return left * right;
+        //left = left == null ? 1 : left;
+        //right = right == null ? 1 : right;
+        //return left * right;
+        return left == null || right == null ? null : left * right;
     }
 }
