@@ -30,7 +30,7 @@ public class FCSolver implements Solver{
     private boolean solveOneR(int depth){
         depth++;
         Variable var = cspp.getVarsList().get(depth);
-        preCutDoms = backupDomains();
+        HashMap<String, ArrayList<Integer>> preCutDoms = backupDomains();
         while(var.hasMoreValues()){
             var.setNextValue();
 
@@ -47,13 +47,13 @@ public class FCSolver implements Solver{
                 }
             }
         }
-        restoreDomains();
+        restoreDomains(preCutDoms);
         var.reset();
 
         return false;
     }
 
-    private void restoreDomains() {
+    private void restoreDomains(HashMap<String, ArrayList<Integer>> preCutDoms) {
         for(Variable var : cspp.getVarsList()){
             var.setChangingDomain(preCutDoms.get(var.getName()));
         }
@@ -74,25 +74,39 @@ public class FCSolver implements Solver{
     private void solveFullR(int depth, boolean write){
         depth++;
         Variable var = cspp.getVarsList().get(depth);
-        preCutDoms = backupDomains();
+        if (depth == 1)
+            System.out.println();
+        HashMap<String, ArrayList<Integer>> preCutDoms = backupDomains();
 
         while(var.hasMoreValues()){
             var.setNextValue();
-
+            if (depth == 0)
+                System.out.println();
             if(isAllowed(var)){
                 if(depth == cspp.getVarsList().size()-1) { //uda³o siê
                     if(write)
                         write1Result();
+                    /*if(cspp.getVarsList().get(0).getValue() == 1 &&
+                            cspp.getVarsList().get(1).getValue() == 3 &&
+                            cspp.getVarsList().get(2).getValue() == 1)
+                        System.out.println();
+
+                    if(allResults.size() == 9)
+                        System.out.println();*/
+                    restoreDomains(preCutDoms);
+
                     System.out.println(numSolutions++);
                 } else {
                     if(cutFromDomains(depth)) {
                         //sortVariables();
                         solveFullR(depth, write);
+                        restoreDomains(preCutDoms);
+
                     }
                 }
             }
         }
-        restoreDomains();
+        //restoreDomains(preCutDoms);
         var.reset();
     }
 
@@ -151,7 +165,8 @@ public class FCSolver implements Solver{
             }
             var.reset();
 
-            allFull = changingDomain.size()!=0;
+            if(allFull = changingDomain.size()!=0)
+                failedIndex = i;
         }
         //przywracanie
         if(!allFull) {

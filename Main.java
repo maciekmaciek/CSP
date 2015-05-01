@@ -3,6 +3,8 @@ import Solver.BTSolver;
 import Solver.FCSolver;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Maciej Wolañski
@@ -18,8 +20,20 @@ public class Main {
         BTSolver bts = new BTSolver(cspp);
         FCSolver fcs = new FCSolver(cspp);
 
-        bts.solveFull(false);
-        fcs.solveFull(false);
+        bts.solveFull(true);
+        for(HashMap<String, Integer> hm : bts.getAllSolutions()){
+            for(Map.Entry<String, Integer> me : hm.entrySet()){
+                System.out.print(me.getKey() + ": " + me.getValue() + "\t");
+            }
+            System.out.println();
+        }
+        fcs.solveFull(true);
+        for(HashMap<String, Integer> hm : fcs.getAllSolutions()){
+            for(Map.Entry<String, Integer> me : hm.entrySet()){
+                System.out.print(me.getKey() + ": " + me.getValue() + "\t");
+            }
+            System.out.println();
+        }
         System.out.println(bts.getNumSolutions());
         System.out.println(fcs.getNumSolutions());
     }
