@@ -48,7 +48,10 @@ public class Variable implements Comparable<Variable>{
 
     public void setChangingDomain(ArrayList<Integer> domain)
     {
-        this.changingDomain = domain;
+        changingDomain.clear();
+        for(Integer i: domain){
+            changingDomain.add(new Integer(i));
+        }
     }
 
     public ArrayList<Integer> getDomain()
@@ -75,8 +78,8 @@ public class Variable implements Comparable<Variable>{
 
     public boolean hasMoreValues()
     {
-        boolean isLast = changingDomain.get(changingDomain.size()-1).equals(value);
-        boolean isLast2 = changingDomain.get(changingDomain.size()-1) == (value);
+        //boolean isLast = changingDomain.get(changingDomain.size()-1).equals(value);
+        //boolean isLast2 = changingDomain.get(changingDomain.size()-1) == (value);
         return (this.value==null && this.changingDomain.size() > 0) ||
                 (this.value != null && !this.value.equals(this.changingDomain.get(this.changingDomain.size()-1)));
     }

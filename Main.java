@@ -14,13 +14,13 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args){
         //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku3d.Txt"));
-        //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Hetmany.Txt"));
+        CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Hetmany.Txt"));
         //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\Sudoku.Txt"));
-        CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\BasicProblem.Txt"));
+        //CSPParser cspp = new CSPParser(new File(System.getProperty("user.dir")+"\\src\\main\\java\\ProblemSamples\\BasicProblem.Txt"));
         BTSolver bts = new BTSolver(cspp);
         FCSolver fcs = new FCSolver(cspp);
 
-        bts.solveFull(true);
+//        bts.solveFull(true);
         for(HashMap<String, Integer> hm : bts.getAllSolutions()){
             for(Map.Entry<String, Integer> me : hm.entrySet()){
                 System.out.print(me.getKey() + ": " + me.getValue() + "\t");
@@ -28,6 +28,7 @@ public class Main {
             System.out.println();
         }
         fcs.solveFull(true);
+        //fcs.solveOne();
         for(HashMap<String, Integer> hm : fcs.getAllSolutions()){
             for(Map.Entry<String, Integer> me : hm.entrySet()){
                 System.out.print(me.getKey() + ": " + me.getValue() + "\t");

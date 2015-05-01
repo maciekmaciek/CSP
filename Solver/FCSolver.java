@@ -15,7 +15,7 @@ public class FCSolver implements Solver{
     int numSolutions;
     CSPParser cspp;
     ArrayList<HashMap<String, Integer>> allResults;
-    HashMap<String, ArrayList<Integer>> preCutDoms;
+    //HashMap<String, ArrayList<Integer>> preCutDoms;
 
 
     public FCSolver(CSPParser cspp) {
@@ -40,11 +40,14 @@ public class FCSolver implements Solver{
                     return true;
                 } else {
                     if(cutFromDomains(depth)) {
-                        sortVariables();
+                        //sortVariables();
                         if (solveOneR(depth))
                             return true;
+                        //restoreDomains(preCutDoms);
+                        //var.reset();
                     }
                 }
+                restoreDomains(preCutDoms);
             }
         }
         restoreDomains(preCutDoms);
@@ -74,8 +77,6 @@ public class FCSolver implements Solver{
     private void solveFullR(int depth, boolean write){
         depth++;
         Variable var = cspp.getVarsList().get(depth);
-        if (depth == 1)
-            System.out.println();
         HashMap<String, ArrayList<Integer>> preCutDoms = backupDomains();
 
         while(var.hasMoreValues()){
@@ -86,27 +87,20 @@ public class FCSolver implements Solver{
                 if(depth == cspp.getVarsList().size()-1) { //uda³o siê
                     if(write)
                         write1Result();
-                    /*if(cspp.getVarsList().get(0).getValue() == 1 &&
-                            cspp.getVarsList().get(1).getValue() == 3 &&
-                            cspp.getVarsList().get(2).getValue() == 1)
-                        System.out.println();
-
-                    if(allResults.size() == 9)
-                        System.out.println();*/
-                    restoreDomains(preCutDoms);
-
                     System.out.println(numSolutions++);
+                    //restoreDomains(preCutDoms);
                 } else {
                     if(cutFromDomains(depth)) {
                         //sortVariables();
                         solveFullR(depth, write);
-                        restoreDomains(preCutDoms);
-
+                        //var.reset();
                     }
+                    restoreDomains(preCutDoms);
                 }
+
             }
         }
-        //restoreDomains(preCutDoms);
+        restoreDomains(preCutDoms);
         var.reset();
     }
 
